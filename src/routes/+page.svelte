@@ -1,5 +1,8 @@
 <script>
-    const socket = new WebSocket("ws://127.0.0.1:8080/ws")
+    import { onMount } from "svelte";
+
+    onMount(()=>{
+        const socket = new WebSocket("ws://127.0.0.1:8080/ws")
     socket.onopen = () =>{
         console.log("CONNECTED!!!")
     }
@@ -12,6 +15,8 @@
     socket.onmessage = msg =>{
         console.log(msg);
     }
+    })
+    
 </script>
 
 
