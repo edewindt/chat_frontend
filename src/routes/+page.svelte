@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     let socket;
+    let users = [];
 
     onMount(()=>{
         socket = new WebSocket("ws://127.0.0.1:8080/ws")
@@ -14,9 +15,21 @@
         console.log("YOU SCREWED UP!!")
     }
     socket.onmessage = msg =>{
-        console.log(msg);
-        let j = JSON.parse(msg.data);
-        console.log(j);
+        // console.log(msg);
+        // let j = JSON.parse(msg.data);
+        // console.log(j);
+
+        let data = JSON.parse(msg.data);
+        console.log(data.action);
+        switch (data.action) {
+            case "list_users":
+                users = [];
+                if (data.connected_users.length > 0) {
+                    users = data.connected_users;
+                }
+            default:
+                break;
+        }
     }
     })
 
@@ -37,6 +50,11 @@
     <label for="text">Message:</label>
     <input type="text">
 </div>
+<ul>
+    {#each users as user}
+    <li>{user}</li>
+    {/each}
+</ul>
 <div class="output"></div>
 
 <h1>Welcome to SvelteKit</h1>
