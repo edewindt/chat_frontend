@@ -84,43 +84,57 @@
 </script>
 <svelte:window on:beforeunload={beforeUnload}/>
 
-<div class="form-group">
-    <form action="">
-      <label for="text">Username:</label>
-    <input type="text" bind:value={username} on:change={enter_username}>  
-    </form>
+<div class="win-items">
+    <div class="form-group">
+        <form action="">
+          <label for="text">Username:</label>
+        <input type="text" bind:value={username} on:change={enter_username}>
+        </form>
     
     
-    <form on:submit|preventDefault={sendMessage}>
-        <label for="text">Message:</label>
-    <textarea id="send-message" bind:value={message} on:keydown={Keydown}></textarea>
-    <button id="send-message">Send Message</button>
-    </form>
+        <form on:submit|preventDefault={sendMessage}>
+            <label for="text">Message:</label>
+        <textarea id="send-message" bind:value={message} on:keydown={Keydown}></textarea>
+        <button id="send-message">Send Message</button>
+        </form>
+        <div class="output">
+        {@html messages}
+    </div>
+    </div>
     
+    
+    <div class="users">
+        <h3>Users Online:</h3>
+        <ul>
+            {#each users as user}
+            <li>{user}</li>
+            {/each}
+        </ul>
+    </div>
 </div>
-<ul>
-    {#each users as user}
-    <li>{user}</li>
-    {/each}
-</ul>
-<div class="output">
-    {@html messages}
-</div>
-
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-
 <style>
     form {
         display: flex;
         flex-direction: column;
     }
+
+    .output {
+        border: 1px solid black;
+        padding: 1rem;
+        border-radius: .5rem;
+    }
+    .win-items{
+        display: flex;
+    }
     .form-group{
         display: flex;
         flex-direction: column;
         margin: 2rem;
+        width: 100%;
+        flex: 3;
     }
-    .output {
-        margin: 2rem;
+    .users{
+        width: 100%;
+        flex:1;
     }
 </style>
