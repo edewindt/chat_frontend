@@ -3,7 +3,7 @@
     let socket;
     let users = [];
     
-
+    let messages = "";
     onMount(()=>{
         socket = new WebSocket("ws://127.0.0.1:8080/ws")
     socket.onopen = () =>{
@@ -29,6 +29,8 @@
                     users = data.connected_users;
                 }
                 break;
+            case "broadcast":
+                messages += data.message + "<br>";
             default:
                 break;
         }
@@ -55,28 +57,50 @@
         jsonData.action = "broadcast";
         jsonData.username = username;
         jsonData.message = message;
+        socket.send(JSON.stringify(jsonData));
     }
+    // const Keydown = (e) =>{
+    //     if (e.keyCode == 13) {
+    //         if (!socket) {
+    //             console.log("No Connection")
+    //         }
+    //         sendMessage();
+    //     }
+    // }
 </script>
 <svelte:window on:beforeunload={beforeUnload}/>
 
 <div class="form-group">
-    <label for="text">Username:</label>
-    <input type="text" bind:value={username} on:change={enter_username}>
+    <form action="">
+      <label for="text">Username:</label>
+    <input type="text" bind:value={username} on:change={enter_username}>  
+    </form>
     
-    <label for="text">Message:</label>
-    <textarea bind:value={message} on:change={enter_username}></textarea>
+    
+    <form on:submit|preventDefault={sendMessage}>
+        <label for="text">Message:</label>
+    <textarea id="send-message" bind:value={message}></textarea>
+    <button id="send-message">Send Message</button>
+    </form>
+    
 </div>
 <ul>
     {#each users as user}
     <li>{user}</li>
     {/each}
 </ul>
-<div class="output"></div>
+<div class="output">
+    {@html messages}
+</div>
 
 <h1>Welcome to SvelteKit</h1>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 
 <style>
+    form {
+        display: flex;
+        flex-direction: column;
+    }
     .form-group{
         display: flex;
         flex-direction: column;
