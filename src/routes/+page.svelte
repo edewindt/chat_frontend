@@ -72,7 +72,7 @@
         message = "";
     }
     const Keydown = (e) =>{
-        console.log(e.keyCode);        if (e.keyCode == 13 && e.shiftKey) {
+             if (e.keyCode == 13 && e.shiftKey) {
             console.log("Shift key");
             
         } else if((e.keyCode == 13)){
@@ -80,6 +80,7 @@
                 console.log("No Connection")
             }
             e.preventDefault();
+            message.replaceAll("\n", "<br>")
             sendMessage();
         }
     }
@@ -106,7 +107,10 @@
         <div class="status not-connected">Disconncted</div>
         {/if}
         <div class="output">
-        {@html messages}
+            <pre>
+                {@html messages}
+            </pre>
+        
     </div>
     </div>
     
@@ -129,7 +133,6 @@
     .output {
         border: 1px solid black;
         padding: 1rem;
-        border-radius: .5rem;
     }
     .win-items{
         display: flex;
@@ -153,5 +156,8 @@
     }
     .not-connected{
         background-color: orangered;
+    }
+    pre{
+        white-space: pre-line;
     }
 </style>
