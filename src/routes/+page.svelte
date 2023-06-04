@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     let socket;
     let users = [];
+    
 
     onMount(()=>{
         socket = new WebSocket("ws://127.0.0.1:8080/ws")
@@ -27,6 +28,7 @@
                 if (data.connected_users.length > 0) {
                     users = data.connected_users;
                 }
+                break;
             default:
                 break;
         }
@@ -41,8 +43,14 @@
         jsonData.username = username;
         socket.send(JSON.stringify(jsonData))
     }
+    const beforeUnload = () =>{
+        console.log("Leaving");
+        let jsonData = {};
+        jsonData.action = "left";
+        socket.send(JSON.stringify(jsonData));
+    }
 </script>
-
+<svelte:window on:beforeunload={beforeUnload}/>
 
 <div class="form-group">
     <label for="text">Username:</label>
