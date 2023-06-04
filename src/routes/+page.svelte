@@ -34,7 +34,7 @@
         }
     }
     })
-
+    let message = "";
     let username = "";
     const enter_username = () =>{
         console.log("updating: " + username);
@@ -49,14 +49,22 @@
         jsonData.action = "left";
         socket.send(JSON.stringify(jsonData));
     }
+
+    const sendMessage = () => {
+        let jsonData = {};
+        jsonData.action = "broadcast";
+        jsonData.username = username;
+        jsonData.message = message;
+    }
 </script>
 <svelte:window on:beforeunload={beforeUnload}/>
 
 <div class="form-group">
     <label for="text">Username:</label>
     <input type="text" bind:value={username} on:change={enter_username}>
+    
     <label for="text">Message:</label>
-    <input type="text">
+    <textarea bind:value={message} on:change={enter_username}></textarea>
 </div>
 <ul>
     {#each users as user}
@@ -67,3 +75,11 @@
 
 <h1>Welcome to SvelteKit</h1>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+
+<style>
+    .form-group{
+        display: flex;
+        flex-direction: column;
+        margin: 2rem;
+    }
+</style>
