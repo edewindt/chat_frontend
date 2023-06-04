@@ -1,11 +1,12 @@
 <script>
     import { onMount } from "svelte";
+    import ReconnectingWebSocket from 'reconnecting-websocket';
     let socket;
     let users = [];
     
     let messages = "";
     onMount(()=>{
-        socket = new WebSocket("ws://127.0.0.1:8080/ws")
+        socket = new ReconnectingWebSocket("ws://127.0.0.1:8080/ws")
     socket.onopen = () =>{
         console.log("CONNECTED!!!")
     }
