@@ -3,15 +3,17 @@
     import ReconnectingWebSocket from 'reconnecting-websocket';
     let socket;
     let users = [];
-    
+    let isConnected = false;
     let messages = "";
     onMount(()=>{
         socket = new ReconnectingWebSocket("ws://127.0.0.1:8080/ws")
     socket.onopen = () =>{
         console.log("CONNECTED!!!")
+        isConnected = true;
     }
     socket.onclose = () =>{
         console.log("CONNECTION CLOSED!!")
+        isConnected = false;
     }
     socket.onerror = () =>{
         console.log("YOU SCREWED UP!!")
@@ -70,8 +72,7 @@
         message = "";
     }
     const Keydown = (e) =>{
-        console.log(e.keyCode);
-        if (e.keyCode == 13 && e.shiftKey) {
+        console.log(e.keyCode);        if (e.keyCode == 13 && e.shiftKey) {
             console.log("Shift key");
             
         } else if((e.keyCode == 13)){
@@ -82,6 +83,7 @@
             sendMessage();
         }
     }
+
 </script>
 <svelte:window on:beforeunload={beforeUnload}/>
 
@@ -98,6 +100,11 @@
         <textarea id="send-message" bind:value={message} on:keydown={Keydown}></textarea>
         <button id="send-message">Send Message</button>
         </form>
+        {#if isConnected}
+        <div class="status connected">Connected</div>
+        {:else}
+        <div class="status not-connected">Disconncted</div>
+        {/if}
         <div class="output">
         {@html messages}
     </div>
@@ -137,5 +144,14 @@
     .users{
         width: 100%;
         flex:1;
+    }
+    .status{
+        text-align: center;
+    }
+    .connected{
+        background-color: aquamarine;
+    }
+    .not-connected{
+        background-color: orangered;
     }
 </style>
