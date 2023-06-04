@@ -53,8 +53,12 @@
     }
 
     const sendMessage = () => {
+        if(message == "") {
+            alert("Enter a Message");
+            return;
+        }
         if (username === ""){
-            console.log("Provide Username");
+            alert("Enter a Username");
             return;
         }
         let jsonData = {};
@@ -114,6 +118,9 @@
     .form-group{
         display: flex;
         flex-direction: column;
+        margin: 2rem;
+    }
+    .output {
         margin: 2rem;
     }
 </style>
