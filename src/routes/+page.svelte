@@ -64,14 +64,19 @@
         socket.send(JSON.stringify(jsonData));
         message = "";
     }
-    // const Keydown = (e) =>{
-    //     if (e.keyCode == 13) {
-    //         if (!socket) {
-    //             console.log("No Connection")
-    //         }
-    //         sendMessage();
-    //     }
-    // }
+    const Keydown = (e) =>{
+        console.log(e.keyCode);
+        if (e.keyCode == 13 && e.shiftKey) {
+            console.log("Shift key");
+            
+        } else if((e.keyCode == 13)){
+            if (!socket) {
+                console.log("No Connection")
+            }
+            e.preventDefault();
+            sendMessage();
+        }
+    }
 </script>
 <svelte:window on:beforeunload={beforeUnload}/>
 
@@ -84,7 +89,7 @@
     
     <form on:submit|preventDefault={sendMessage}>
         <label for="text">Message:</label>
-    <textarea id="send-message" bind:value={message}></textarea>
+    <textarea id="send-message" bind:value={message} on:keydown={Keydown}></textarea>
     <button id="send-message">Send Message</button>
     </form>
     
