@@ -5,6 +5,17 @@
     let users = [];
     let isConnected = false;
     let messages = "";
+    let output;
+
+const autoscroll = () =>{
+     let messages = output;
+let visibleHeight = messages.offsetHeight;
+let totalHeight = messages.scrollHeight;
+let scrollOffset = messages.scrollTop + visibleHeight;
+if (totalHeight <= scrollOffset + 100) {
+messages.scrollTop = messages.scrollHeight;
+}
+}
     onMount(()=>{
         socket = new ReconnectingWebSocket("ws://127.0.0.1:8080/ws")
     socket.onopen = () =>{
@@ -34,6 +45,7 @@
                 break;
             case "broadcast":
                 messages += data.message + "<br>";
+                autoscroll();
             default:
                 break;
         }
@@ -80,10 +92,11 @@
                 console.log("No Connection")
             }
             e.preventDefault();
-            message.replaceAll("\n", "<br>")
             sendMessage();
+
         }
     }
+
 
 </script>
 <svelte:window on:beforeunload={beforeUnload}/>
@@ -106,7 +119,7 @@
         {:else}
         <div class="status not-connected">Disconncted</div>
         {/if}
-        <div class="output">
+        <div class="output" bind:this={output}>
             <pre>
                 {@html messages}
             </pre>
@@ -133,6 +146,8 @@
     .output {
         border: 1px solid black;
         padding: 1rem;
+        height: 20rem;
+        overflow-y: auto;
     }
     .win-items{
         display: flex;
