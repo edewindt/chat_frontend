@@ -53,11 +53,16 @@
     }
 
     const sendMessage = () => {
+        if (username === ""){
+            console.log("Provide Username");
+            return;
+        }
         let jsonData = {};
         jsonData.action = "broadcast";
         jsonData.username = username;
         jsonData.message = message;
         socket.send(JSON.stringify(jsonData));
+        message = "";
     }
     // const Keydown = (e) =>{
     //     if (e.keyCode == 13) {
