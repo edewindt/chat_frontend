@@ -109,11 +109,7 @@ messages.scrollTop = messages.scrollHeight;
         </form>
     
     
-        <form on:submit|preventDefault={sendMessage}>
-            <label for="text">Message:</label>
-        <textarea id="send-message" bind:value={message} on:keydown={Keydown}></textarea>
-        <button id="send-message">Send Message</button>
-        </form>
+        
         {#if isConnected}
         <div class="status connected">Connected</div>
         {:else}
@@ -125,6 +121,11 @@ messages.scrollTop = messages.scrollHeight;
             </pre>
         
     </div>
+    <form on:submit|preventDefault={sendMessage}>
+        <label for="text">Message:</label>
+    <textarea id="send-message" bind:value={message} on:keydown={Keydown}></textarea>
+    <button id="send-message">Send Message</button>
+    </form>
     </div>
     
     
@@ -174,5 +175,9 @@ messages.scrollTop = messages.scrollHeight;
     }
     pre{
         white-space: pre-line;
+    }
+    textarea{
+        resize: none;
+        height: 2rem;
     }
 </style>
