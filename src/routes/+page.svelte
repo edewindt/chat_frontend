@@ -45,7 +45,7 @@ messages.scrollTop = messages.scrollHeight;
                 }
                 break;
             case "broadcast":
-                messages += data.message + "<br>";
+                messages += data.message;
                 autoscroll();
             case "is_typing":
                 are_typing = data.typing_users
@@ -95,12 +95,11 @@ messages.scrollTop = messages.scrollHeight;
     }
     const stopped_typing = () =>{
         let jsonData = {};
-        jsonData.action = "is_typing";
+        jsonData.action = "stopped_typing";
         jsonData.username = username;
         socket.send(JSON.stringify(jsonData))
     }
     const Keydown = (e) =>{
-        typing();
              if (e.keyCode == 13 && e.shiftKey) {
             console.log("Shift key");
             
@@ -110,7 +109,6 @@ messages.scrollTop = messages.scrollHeight;
             }
             e.preventDefault();
             sendMessage();
-
         }
     }
 
@@ -134,13 +132,14 @@ messages.scrollTop = messages.scrollHeight;
         {/if}
         <div class="output" bind:this={output}>
             <pre>
-                {@html messages}
+                {messages}
             </pre>
         
     </div>
+    <p>{#each are_typing as typing}{typing} {/each}are typing...</p>
     <form on:submit|preventDefault={sendMessage}>
         <label for="text">Message:</label>
-    <textarea id="send-message" bind:value={message} on:keydown={Keydown} on></textarea>
+    <textarea id="send-message" bind:value={message} on:input={typing} on:keydown={Keydown} ></textarea>
     <button id="send-message">Send Message</button>
     </form>
     </div>
