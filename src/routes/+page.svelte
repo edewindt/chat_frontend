@@ -3,6 +3,7 @@
     import ReconnectingWebSocket from 'reconnecting-websocket';
     let socket;
     let users = [];
+    let are_typing = [];
     let isConnected = false;
     let messages = "";
     let output;
@@ -46,6 +47,8 @@ messages.scrollTop = messages.scrollHeight;
             case "broadcast":
                 messages += data.message + "<br>";
                 autoscroll();
+            case "is_typing":
+                are_typing = data.typing_users
             default:
                 break;
         }
@@ -83,13 +86,27 @@ messages.scrollTop = messages.scrollHeight;
         socket.send(JSON.stringify(jsonData));
         message = "";
     }
+
+    const typing = () =>{
+        let jsonData = {};
+        jsonData.action = "is_typing";
+        jsonData.username = username;
+        socket.send(JSON.stringify(jsonData))
+    }
+    const stopped_typing = () =>{
+        let jsonData = {};
+        jsonData.action = "is_typing";
+        jsonData.username = username;
+        socket.send(JSON.stringify(jsonData))
+    }
     const Keydown = (e) =>{
+        typing();
              if (e.keyCode == 13 && e.shiftKey) {
             console.log("Shift key");
             
         } else if((e.keyCode == 13)){
             if (!socket) {
-                console.log("No Connection")
+                alert("No Connection");
             }
             e.preventDefault();
             sendMessage();
@@ -123,7 +140,7 @@ messages.scrollTop = messages.scrollHeight;
     </div>
     <form on:submit|preventDefault={sendMessage}>
         <label for="text">Message:</label>
-    <textarea id="send-message" bind:value={message} on:keydown={Keydown}></textarea>
+    <textarea id="send-message" bind:value={message} on:keydown={Keydown} on></textarea>
     <button id="send-message">Send Message</button>
     </form>
     </div>
