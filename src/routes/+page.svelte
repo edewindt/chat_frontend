@@ -91,12 +91,12 @@ output.scrollTop = output.scrollHeight;
         jsonData.username = username;
         socket.send(JSON.stringify(jsonData));
     }
-    // const stopped_typing = () =>{
-    //     let jsonData = {};
-    //     jsonData.action = "stopped_typing";
-    //     jsonData.username = username;
-    //     socket.send(JSON.stringify(jsonData));
-    // }
+    const stoppedTyping = () =>{
+        let jsonData = {};
+        jsonData.action = "stopped_typing";
+        jsonData.username = username;
+        socket.send(JSON.stringify(jsonData));
+    }
     const Keydown = (e) =>{
              if (e.keyCode == 13 && e.shiftKey) {
             console.log("Shift key");
@@ -111,7 +111,7 @@ output.scrollTop = output.scrollHeight;
     }
     $: if (message == "") {
         isTyping = false;
-        stopped_typing();
+        stoppedTyping();
     }
 $: if (message != "") {
     if (isTyping) {
