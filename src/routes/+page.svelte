@@ -8,15 +8,15 @@
     let messages = "";
     let output;
 
-const autoscroll = () =>{
-     let messages = output;
-let visibleHeight = messages.offsetHeight;
-let totalHeight = messages.scrollHeight;
-let scrollOffset = messages.scrollTop + visibleHeight;
-if (totalHeight <= scrollOffset + 100) {
-messages.scrollTop = messages.scrollHeight;
-}
-}
+// const autoscroll = () =>{
+//      let messages = output;
+// let visibleHeight = messages.offsetHeight;
+// let totalHeight = messages.scrollHeight;
+// // let scrollOffset = messages.scrollTop + visibleHeight;
+// if (totalHeight <= scrollOffset + 100) {
+// messages.scrollTop = messages.scrollHeight;
+// }
+// }
     onMount(()=>{
         socket = new ReconnectingWebSocket("ws://127.0.0.1:8080/ws")
     socket.onopen = () =>{
@@ -45,8 +45,10 @@ messages.scrollTop = messages.scrollHeight;
                 }
                 break;
             case "broadcast":
+               let messagesplit = data.message.split(":")
+               console.log(messagesplit)
                 messages += data.message;
-                autoscroll();
+                // autoscroll();
             case "is_typing":
                 are_typing = data.typing_users
             default:
@@ -87,18 +89,18 @@ messages.scrollTop = messages.scrollHeight;
         message = "";
     }
 
-    const typing = () =>{
-        let jsonData = {};
-        jsonData.action = "is_typing";
-        jsonData.username = username;
-        socket.send(JSON.stringify(jsonData))
-    }
-    const stopped_typing = () =>{
-        let jsonData = {};
-        jsonData.action = "stopped_typing";
-        jsonData.username = username;
-        socket.send(JSON.stringify(jsonData))
-    }
+    // const typing = () =>{
+    //     let jsonData = {};
+    //     jsonData.action = "is_typing";
+    //     jsonData.username = username;
+    //     socket.send(JSON.stringify(jsonData))
+    // }
+    // const stopped_typing = () =>{
+    //     let jsonData = {};
+    //     jsonData.action = "stopped_typing";
+    //     jsonData.username = username;
+    //     socket.send(JSON.stringify(jsonData))
+    // }
     const Keydown = (e) =>{
              if (e.keyCode == 13 && e.shiftKey) {
             console.log("Shift key");
@@ -136,10 +138,10 @@ messages.scrollTop = messages.scrollHeight;
             </pre>
         
     </div>
-    <p>{#each are_typing as typing}{typing} {/each}are typing...</p>
+    <!-- <p>{#each are_typing as typing}{typing} {/each}are typing...</p> -->
     <form on:submit|preventDefault={sendMessage}>
         <label for="text">Message:</label>
-    <textarea id="send-message" bind:value={message} on:input={typing} on:keydown={Keydown} ></textarea>
+    <textarea id="send-message" bind:value={message} on:keydown={Keydown} ></textarea>
     <button id="send-message">Send Message</button>
     </form>
     </div>
