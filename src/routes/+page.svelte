@@ -8,15 +8,15 @@
     let messages = [];
     let output;
 
-// const autoscroll = () =>{
-//      let messages = output;
-// let visibleHeight = messages.offsetHeight;
-// let totalHeight = messages.scrollHeight;
-// // let scrollOffset = messages.scrollTop + visibleHeight;
-// if (totalHeight <= scrollOffset + 100) {
-// messages.scrollTop = messages.scrollHeight;
-// }
-// }
+const autoscroll = () =>{
+     let typed_messages = output;
+let visibleHeight = typed_messages.offsetHeight;
+let totalHeight = typed_messages.scrollHeight;
+let scrollOffset = typed_messages.scrollTop + visibleHeight;
+if (totalHeight <= scrollOffset + 100) {
+typed_messages.scrollTop = typed_messages.scrollHeight;
+}
+}
     onMount(()=>{
         socket = new ReconnectingWebSocket("ws://127.0.0.1:8080/ws")
     socket.onopen = () =>{
@@ -31,10 +31,6 @@
         console.log("YOU SCREWED UP!!")
     }
     socket.onmessage = msg =>{
-        // console.log(msg);
-        // let j = JSON.parse(msg.data);
-        // console.log(j);
-
         let data = JSON.parse(msg.data);
         console.log(data.action);
         switch (data.action) {
@@ -46,9 +42,8 @@
                 break;
             case "broadcast":
                let messagesplit = data.message.split(":")
-               console.log(messagesplit)
                 messages = [...messages,{"sender":messagesplit[0], "message":messagesplit[1]}]
-                // autoscroll();
+                autoscroll();
             case "is_typing":
                 are_typing = data.typing_users
             default:
