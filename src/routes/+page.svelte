@@ -9,12 +9,11 @@
     let output;
 
 const autoscroll = () =>{
-     let typed_messages = output;
-let visibleHeight = typed_messages.offsetHeight;
-let totalHeight = typed_messages.scrollHeight;
-let scrollOffset = typed_messages.scrollTop + visibleHeight;
+let visibleHeight = output.offsetHeight;
+let totalHeight = output.scrollHeight;
+let scrollOffset = output.scrollTop + visibleHeight;
 if (totalHeight <= scrollOffset + 100) {
-typed_messages.scrollTop = typed_messages.scrollHeight;
+output.scrollTop = output.scrollHeight;
 }
 }
     onMount(()=>{
@@ -41,8 +40,8 @@ typed_messages.scrollTop = typed_messages.scrollHeight;
                 }
                 break;
             case "broadcast":
-               let messagesplit = data.message.split(":")
-                messages = [...messages,{"sender":messagesplit[0], "message":messagesplit[1]}]
+               let messagesplit = data.message.split(":");
+                messages = [...messages,{"sender":messagesplit[0], "message":messagesplit[1]}];
                 autoscroll();
             case "is_typing":
                 are_typing = data.typing_users
@@ -58,7 +57,7 @@ typed_messages.scrollTop = typed_messages.scrollHeight;
         let jsonData = {};
         jsonData.action = "username";
         jsonData.username = username;
-        socket.send(JSON.stringify(jsonData))
+        socket.send(JSON.stringify(jsonData));
     }
     const beforeUnload = () =>{
         console.log("Leaving");
@@ -84,18 +83,19 @@ typed_messages.scrollTop = typed_messages.scrollHeight;
         message = "";
     }
 
-    // const typing = () =>{
-    //     let jsonData = {};
-    //     jsonData.action = "is_typing";
-    //     jsonData.username = username;
-    //     socket.send(JSON.stringify(jsonData))
-    // }
-    // const stopped_typing = () =>{
-    //     let jsonData = {};
-    //     jsonData.action = "stopped_typing";
-    //     jsonData.username = username;
-    //     socket.send(JSON.stringify(jsonData))
-    // }
+    const typing = () =>{
+        console.log("typing")
+        let jsonData = {};
+        jsonData.action = "is_typing";
+        jsonData.username = username;
+        socket.send(JSON.stringify(jsonData));
+    }
+    const stopped_typing = () =>{
+        let jsonData = {};
+        jsonData.action = "stopped_typing";
+        jsonData.username = username;
+        socket.send(JSON.stringify(jsonData));
+    }
     const Keydown = (e) =>{
              if (e.keyCode == 13 && e.shiftKey) {
             console.log("Shift key");
@@ -108,7 +108,6 @@ typed_messages.scrollTop = typed_messages.scrollHeight;
             sendMessage();
         }
     }
-
 
 </script>
 <svelte:window on:beforeunload={beforeUnload}/>
@@ -138,7 +137,7 @@ typed_messages.scrollTop = typed_messages.scrollHeight;
     <!-- <p>{#each are_typing as typing}{typing} {/each}are typing...</p> -->
     <form on:submit|preventDefault={sendMessage}>
         <label for="text">Message:</label>
-    <textarea id="send-message" bind:value={message} on:keydown={Keydown} ></textarea>
+    <textarea id="send-message" bind:value={message} on:keydown={Keydown}></textarea>
     <button id="send-message">Send Message</button>
     </form>
     </div>
@@ -181,6 +180,7 @@ typed_messages.scrollTop = typed_messages.scrollHeight;
     }
     .status{
         text-align: center;
+        border: 1px solid black;
     }
     .connected{
         background-color: aquamarine;
