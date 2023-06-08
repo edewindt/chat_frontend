@@ -5,7 +5,7 @@
     let users = [];
     let are_typing = [];
     let isConnected = false;
-    let messages = "";
+    let messages = [];
     let output;
 
 // const autoscroll = () =>{
@@ -47,7 +47,7 @@
             case "broadcast":
                let messagesplit = data.message.split(":")
                console.log(messagesplit)
-                messages += data.message;
+                messages = [...messages,{"sender":messagesplit[0], "message":messagesplit[1]}]
                 // autoscroll();
             case "is_typing":
                 are_typing = data.typing_users
@@ -134,7 +134,9 @@
         {/if}
         <div class="output" bind:this={output}>
             <pre>
-                {messages}
+                {#each messages as msg}
+                <strong>{msg.sender}</strong>:{msg.message}
+                {/each}
             </pre>
         
     </div>
