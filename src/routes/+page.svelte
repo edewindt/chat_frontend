@@ -8,6 +8,7 @@
     let isTyping = false;
     let messages = [];
     let output;
+    let started = false;
 
 const autoscroll = () =>{
 let visibleHeight = output.offsetHeight;
@@ -18,7 +19,8 @@ output.scrollTop = output.scrollHeight;
 }
 }
     onMount(()=>{
-        socket = new ReconnectingWebSocket("ws://127.0.0.1:8080/ws")
+        socket = new ReconnectingWebSocket("ws://127.0.0.1:8080/ws");
+        started = true;
     socket.onopen = () =>{
         console.log("CONNECTED!!!")
         isConnected = true;
@@ -109,7 +111,7 @@ output.scrollTop = output.scrollHeight;
             sendMessage();
         }
     }
-    $: if (message == "") {
+    $: if (message == "" && started) {
         isTyping = false;
         stoppedTyping();
     }
