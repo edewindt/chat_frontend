@@ -1,22 +1,23 @@
 <script>
-    import { onMount } from "svelte";
-    import ReconnectingWebSocket from 'reconnecting-websocket';
-    let socket;
-    let users = [];
-    let are_typing = [];
-    let isConnected = false;
-    let isTyping = false;
-    let messages = [];
-    let output;
-    let started = false;
+import { onMount } from "svelte";
+import ReconnectingWebSocket from 'reconnecting-websocket';
+let socket;
+let users = [];
+let are_typing = [];
+let isConnected = false;
+let isTyping = false;
+let messages = [];
+let output;
+let started = false;
+let messagessent = false;
 
-const autoscroll = () =>{
-let visibleHeight = output.offsetHeight;
-let totalHeight = output.scrollHeight;
-let scrollOffset = output.scrollTop + visibleHeight;
-if (totalHeight <= scrollOffset + 100) {
-output.scrollTop = output.scrollHeight;
-}
+    const autoscroll = () =>{
+        let visibleHeight = output.offsetHeight;
+        let totalHeight = output.scrollHeight;
+        let scrollOffset = output.scrollTop + visibleHeight;
+        if (totalHeight <= scrollOffset + 100) {
+        output.scrollTop = output.scrollHeight;
+    }
 }
     onMount(()=>{
         socket = new ReconnectingWebSocket("ws://127.0.0.1:8080/ws");
@@ -85,6 +86,21 @@ output.scrollTop = output.scrollHeight;
         socket.send(JSON.stringify(jsonData));
         message = "";
     }
+    let typingTimer;
+    let doneTypingInterval = 2000;
+    const OnTyping = () =>{
+    if (message != "") {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(stoppedTyping, doneTypingInterval);
+    if (isTyping) {
+        console.log("do nothing");
+    }else if(!messagessent){
+      typing();  
+      isTyping = true;
+    }
+
+}
+    }  
 
     const typing = () =>{
         console.log("typing")
@@ -98,8 +114,10 @@ output.scrollTop = output.scrollHeight;
         jsonData.action = "stopped_typing";
         jsonData.username = username;
         socket.send(JSON.stringify(jsonData));
+        isTyping = false;
     }
     const Keydown = (e) =>{
+        OnTyping();
              if (e.keyCode == 13 && e.shiftKey) {
             console.log("Shift key");
             
@@ -115,19 +133,9 @@ output.scrollTop = output.scrollHeight;
         isTyping = false;
         stoppedTyping();
     }
-    let typingTimer;
-    let doneTypingInterval = 2000;  
-$: if (message != "") {
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(stoppedTyping, doneTypingInterval);
-    if (isTyping) {
-        console.log("do nothing");
-    }else{
-      typing();  
-      isTyping = true;
-    }
 
-}
+
+
 </script>
 <svelte:window on:beforeunload={beforeUnload}/>
 
