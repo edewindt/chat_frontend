@@ -115,7 +115,11 @@ output.scrollTop = output.scrollHeight;
         isTyping = false;
         stoppedTyping();
     }
+    let typingTimer;
+    let doneTypingInterval = 2000;  
 $: if (message != "") {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(stoppedTyping, doneTypingInterval);
     if (isTyping) {
         console.log("do nothing");
     }else{
