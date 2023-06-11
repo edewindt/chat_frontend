@@ -155,7 +155,7 @@ let message = "";
         <div class="output" bind:this={output}>
             <pre>
                 {#each messages as msg}
-                <strong class:userstyle={username === msg.sender}>{msg.sender}</strong>:<br>{msg.message}
+                <strong class='sender' class:userstyle={username === msg.sender}>{msg.sender}{Date.now()}</strong><br><div class="msg">{msg.message}</div>
                 {/each}
             </pre>
         
@@ -213,6 +213,18 @@ let message = "";
     }
     .not-connected{
         background-color: orangered;
+    }
+    .output{
+        background-color: rgb(222, 222, 222);
+    }
+    .msg{
+        background-color: aliceblue;
+        width: fit-content;
+        padding: .5rem;
+        border-radius: .5rem;
+    }
+    .sender{
+        padding-left: .5rem;
     }
     pre{
         white-space: pre-line;
