@@ -9,8 +9,8 @@ let isTyping = false;
 let messages = [];
 let output;
 let started = false;
-let messagessent = false;
-
+let message = "";
+    let username = "";
     const autoscroll = () =>{
         let visibleHeight = output.offsetHeight;
         let totalHeight = output.scrollHeight;
@@ -54,8 +54,7 @@ let messagessent = false;
         }
     }
     })
-    let message = "";
-    let username = "";
+
     const enter_username = () =>{
         console.log("updating: " + username);
         let jsonData = {};
@@ -72,6 +71,7 @@ let messagessent = false;
 
     const sendMessage = () => {
         if(message == "") {
+            console.log(message);
             alert("Enter a Message");
             return;
         }
@@ -86,38 +86,38 @@ let messagessent = false;
         socket.send(JSON.stringify(jsonData));
         message = "";
     }
-    let typingTimer;
-    let doneTypingInterval = 2000;
-    const OnTyping = () =>{
-    if (message != "") {
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(stoppedTyping, doneTypingInterval);
-    if (isTyping) {
-        console.log("do nothing");
-    }else if(!messagessent){
-      typing();  
-      isTyping = true;
-    }
+//     let typingTimer;
+//     let doneTypingInterval = 2000;
+//     const OnTyping = () =>{
+//         if (message != "") {
+//             clearTimeout(typingTimer);
+//             typingTimer = setTimeout(stoppedTyping, doneTypingInterval);
+//         if (isTyping) {
+//             console.log("do nothing");
+//         }else{
+//             typing();  
+//             isTyping = true;
+//         }
 
-}
-    }  
+// }
+//     }  
 
-    const typing = () =>{
-        console.log("typing")
-        let jsonData = {};
-        jsonData.action = "is_typing";
-        jsonData.username = username;
-        socket.send(JSON.stringify(jsonData));
-    }
-    const stoppedTyping = () =>{
-        let jsonData = {};
-        jsonData.action = "stopped_typing";
-        jsonData.username = username;
-        socket.send(JSON.stringify(jsonData));
-        isTyping = false;
-    }
+//     const typing = () =>{
+//         console.log("typing")
+//         let jsonData = {};
+//         jsonData.action = "is_typing";
+//         jsonData.username = username;
+//         socket.send(JSON.stringify(jsonData));
+//     }
+//     const stoppedTyping = () =>{
+//         let jsonData = {};
+//         jsonData.action = "stopped_typing";
+//         jsonData.username = username;
+//         socket.send(JSON.stringify(jsonData));
+//         isTyping = false;
+//     }
     const Keydown = (e) =>{
-        OnTyping();
+        // OnTyping();
              if (e.keyCode == 13 && e.shiftKey) {
             console.log("Shift key");
             
@@ -129,10 +129,9 @@ let messagessent = false;
             sendMessage();
         }
     }
-    $: if (message == "" && started) {
-        isTyping = false;
-        stoppedTyping();
-    }
+//     $: if (message == "" && started) {
+//         stoppedTyping();
+//     }
 
 
 
@@ -156,15 +155,15 @@ let messagessent = false;
         <div class="output" bind:this={output}>
             <pre>
                 {#each messages as msg}
-                <strong>{msg.sender}</strong>:{msg.message}
+                <strong class:userstyle={username === msg.sender}>{msg.sender}</strong>:{msg.message}
                 {/each}
             </pre>
         
     </div>
-    <p>{#each are_typing as typing}{typing} {/each}are typing...</p>
+<!-- <p>{#each are_typing as typing, n}{typing} {#if n < are_typing.length -2},{:else if n < are_typing.length - 1}and{/if} {/each}are typing...</p> -->
     <form on:submit|preventDefault={sendMessage}>
         <label for="text">Message:</label>
-    <textarea id="send-message" bind:value={message} on:keydown={Keydown}></textarea>
+    <textarea id="send-message" on:keydown={Keydown} bind:value={message} ></textarea>
     <button id="send-message">Send Message</button>
     </form>
     </div>
@@ -174,7 +173,7 @@ let messagessent = false;
         <h3>Users Online:</h3>
         <ul>
             {#each users as user}
-            <li>{user}</li>
+            <li class:userstyle={username === user}>{user} {#if username === user}(You){/if}</li>
             {/each}
         </ul>
     </div>
@@ -221,5 +220,8 @@ let messagessent = false;
     textarea{
         resize: none;
         height: 2rem;
+    }
+    .userstyle{
+        color:Red;
     }
 </style>
