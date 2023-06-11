@@ -155,7 +155,7 @@ let message = "";
         <div class="output" bind:this={output}>
             <pre>
                 {#each messages as msg}
-                <strong class:userstyle={username === msg.sender}>{msg.sender}</strong>:{msg.message}
+                <strong class:userstyle={username === msg.sender}>{msg.sender}</strong>:<br>{msg.message}
                 {/each}
             </pre>
         
