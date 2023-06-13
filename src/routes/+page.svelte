@@ -1,6 +1,7 @@
 <script>
 import { onMount } from "svelte";
 import ReconnectingWebSocket from 'reconnecting-websocket';
+import dateFormat, { masks } from "dateformat";
 let socket;
 let users = [];
 let are_typing = [];
@@ -155,7 +156,7 @@ let message = "";
         <div class="output" bind:this={output}>
             <pre>
                 {#each messages as msg}
-                <strong class='sender' class:userstyle={username === msg.sender}>{msg.sender}{Date.now()}</strong><br><div class="msg" class:usermsg={username === msg.sender}>{msg.message}</div>
+                <strong class='sender' class:userstyle={username === msg.sender}>{msg.sender}{dateFormat(Date.now(), "dddd, mmmm dS, yyyy, h:MM:ss TT")}</strong><br><div class="msg" class:usermsg={username === msg.sender}>{msg.message}</div>
                 {/each}
             </pre>
         
